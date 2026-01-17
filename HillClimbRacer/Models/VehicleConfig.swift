@@ -94,7 +94,7 @@ extension VehicleConfig {
         let speedMultiplier = 1.0 + (CGFloat(engineLevel - 1) * Constants.Upgrades.maxSpeedPerLevel)
         let fuelMultiplier = 1.0 + (CGFloat(fuelLevel - 1) * Constants.Upgrades.fuelCapacityPerLevel)
         let efficiencyMultiplier = 1.0 - (CGFloat(fuelLevel - 1) * Constants.Upgrades.fuelEfficiencyPerLevel)
-        let gripMultiplier = 1.0 + (CGFloat(tiresLevel - 1) * Constants.Upgrades.tireGripPerLevel)
+        _ = 1.0 + (CGFloat(tiresLevel - 1) * Constants.Upgrades.tireGripPerLevel) // gripMultiplier reserved for future use
         let suspensionMultiplier = 1.0 + (CGFloat(suspensionLevel - 1) * Constants.Upgrades.suspensionStiffnessPerLevel)
 
         return VehicleConfig(

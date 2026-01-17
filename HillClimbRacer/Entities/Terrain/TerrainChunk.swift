@@ -66,7 +66,7 @@ class TerrainChunk: SKNode {
 
     private func setupPhysics(points: [CGPoint]) {
         // Create edge chain from surface points for terrain collision
-        var edgePoints = points
+        let edgePoints = points
 
         // Create physics body from edge chain
         let edgePath = CGMutablePath()

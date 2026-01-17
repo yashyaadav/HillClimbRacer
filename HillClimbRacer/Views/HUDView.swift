@@ -110,7 +110,7 @@ struct FuelGaugeView: View {
         .opacity(isLowFuel ? (isPulsing ? 0.4 : 1.0) : 1.0)
         .animation(isLowFuel ? .easeInOut(duration: 0.3).repeatForever(autoreverses: true) : .default, value: isPulsing)
         .onAppear { isPulsing = true }
-        .onChange(of: fuel) { _ in isPulsing = true }
+        .onChange(of: fuel) { isPulsing = true }
     }
 
     private var isLowFuel: Bool {
