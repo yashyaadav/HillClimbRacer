@@ -28,7 +28,7 @@ jobs:
         xcodebuild build \
           -project HillClimbRacer.xcodeproj \
           -scheme HillClimbRacer \
-          -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.0' \
+          -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
           -configuration Debug \
           CODE_SIGNING_ALLOWED=NO
 
@@ -37,7 +37,7 @@ jobs:
         xcodebuild test \
           -project HillClimbRacer.xcodeproj \
           -scheme HillClimbRacer \
-          -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.0' \
+          -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
           -configuration Debug \
           CODE_SIGNING_ALLOWED=NO \
           -resultBundlePath TestResults \
