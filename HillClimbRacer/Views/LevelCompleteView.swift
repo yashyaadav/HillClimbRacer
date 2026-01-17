@@ -196,7 +196,7 @@ struct StarAnimationView: View {
 
 // MARK: - Stat Row
 
-struct StatRow: View {
+private struct StatRow: View {
     let label: String
     let value: String
     var isNew: Bool = false
