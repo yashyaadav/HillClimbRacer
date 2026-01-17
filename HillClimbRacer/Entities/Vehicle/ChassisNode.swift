@@ -2,6 +2,13 @@
 //  ChassisNode.swift
 //  HillClimbRacer
 //
+//  The main body of the vehicle with optional texture support.
+//
+//  Expected texture asset names (for when you add them):
+//  - "jeep_chassis", "jeep_chassis@2x", "jeep_chassis@3x"
+//  - "motorcycle_chassis", "motorcycle_chassis@2x", "motorcycle_chassis@3x"
+//  - "monstertruck_chassis", "monstertruck_chassis@2x", "monstertruck_chassis@3x"
+//
 
 import SpriteKit
 
@@ -12,11 +19,34 @@ class ChassisNode: SKSpriteNode {
 
     private let chassisSize: CGSize
 
+    /// Whether this node is using a texture or fallback color
+    private(set) var isUsingTexture: Bool = false
+
     // MARK: - Initialization
 
-    init(size: CGSize = CGSize(width: 200, height: 60), color: SKColor = .red) {
+    /// Initialize with optional texture name, falling back to color if texture not found
+    init(
+        size: CGSize = CGSize(width: 200, height: 60),
+        color: SKColor = .red,
+        textureName: String? = nil
+    ) {
         self.chassisSize = size
-        super.init(texture: nil, color: color, size: size)
+
+        // Try to load texture if name provided
+        var loadedTexture: SKTexture?
+        if let name = textureName {
+            loadedTexture = ChassisNode.loadTexture(named: name)
+        }
+
+        if let texture = loadedTexture {
+            // Use texture
+            super.init(texture: texture, color: .white, size: size)
+            self.isUsingTexture = true
+        } else {
+            // Fallback to color
+            super.init(texture: nil, color: color, size: size)
+            self.isUsingTexture = false
+        }
 
         setupPhysics()
     }
@@ -42,5 +72,24 @@ class ChassisNode: SKSpriteNode {
         physicsBody?.angularDamping = 0.5
 
         zPosition = Constants.ZPosition.vehicle
+    }
+
+    // MARK: - Texture Loading
+
+    /// Attempt to load a texture, returning nil if not found
+    private static func loadTexture(named name: String) -> SKTexture? {
+        // Check if the image exists in the asset catalog
+        guard UIImage(named: name) != nil else {
+            return nil
+        }
+        return SKTexture(imageNamed: name)
+    }
+
+    /// Update the chassis texture at runtime
+    func updateTexture(named name: String) {
+        if let texture = ChassisNode.loadTexture(named: name) {
+            self.texture = texture
+            self.isUsingTexture = true
+        }
     }
 }

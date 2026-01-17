@@ -20,7 +20,7 @@ struct ContentView: View {
                 case .mainMenu:
                     MainMenuView()
 
-                case .gameplay, .paused, .gameOver:
+                case .gameplay, .paused, .gameOver, .levelComplete:
                     // SpriteKit game scene
                     if let scene = gameScene {
                         SpriteView(scene: scene)
@@ -42,11 +42,20 @@ struct ContentView: View {
                         GameOverView()
                     }
 
+                    // Level complete overlay
+                    if gameManager.currentScreen == .levelComplete,
+                       let result = gameManager.lastLevelResult {
+                        LevelCompleteView(result: result)
+                    }
+
                 case .garage:
                     GarageView()
 
                 case .settings:
                     SettingsView()
+
+                case .levelSelect:
+                    LevelSelectView()
                 }
             }
             .onAppear {
@@ -97,11 +106,13 @@ struct ContentView: View {
 struct GameplayOverlay: View {
 
     @ObservedObject var gameManager = GameManager.shared
+    @State private var isMusicEnabled = AudioManager.shared.isMusicEnabled
+    @State private var coinAnimationTrigger = false
 
     var body: some View {
         VStack {
             // Top HUD
-            HStack(alignment: .top, spacing: 20) {
+            HStack(alignment: .top, spacing: 12) {
                 // Fuel gauge
                 VStack(alignment: .leading, spacing: 4) {
                     Text("FUEL")
@@ -113,6 +124,24 @@ struct GameplayOverlay: View {
                 }
 
                 Spacer()
+
+                // Music toggle button
+                Button(action: {
+                    isMusicEnabled.toggle()
+                    AudioManager.shared.isMusicEnabled = isMusicEnabled
+                    if isMusicEnabled {
+                        AudioManager.shared.startGameplayMusic()
+                    } else {
+                        AudioManager.shared.stopMusic()
+                    }
+                }) {
+                    Image(systemName: isMusicEnabled ? "speaker.wave.2.fill" : "speaker.slash.fill")
+                        .font(.title3)
+                        .foregroundColor(.white)
+                        .padding(8)
+                        .background(Color.black.opacity(0.3))
+                        .clipShape(Circle())
+                }
 
                 // Pause button
                 Button(action: {
@@ -129,23 +158,8 @@ struct GameplayOverlay: View {
 
                 Spacer()
 
-                // Coins
-                HStack(spacing: 8) {
-                    Circle()
-                        .fill(Color.yellow)
-                        .frame(width: 24, height: 24)
-                        .overlay(
-                            Text("$")
-                                .font(.caption)
-                                .fontWeight(.bold)
-                                .foregroundColor(.orange)
-                        )
-
-                    Text("\(gameManager.gameState.coins)")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                }
+                // Coins with animation
+                CoinDisplayView(coins: gameManager.gameState.coins)
 
                 Spacer()
 
@@ -160,25 +174,100 @@ struct GameplayOverlay: View {
                         .font(.caption)
                         .foregroundColor(.white.opacity(0.7))
                 }
+
+                // Speed display
+                SpeedometerView(speed: gameManager.gameState.currentSpeed)
             }
             .padding(.horizontal, 20)
             .padding(.top, 10)
 
             Spacer()
 
-            // Control hints
-            HStack {
-                Text("BRAKE")
-                    .font(.caption)
-                    .foregroundColor(.white.opacity(0.3))
-                    .frame(maxWidth: .infinity)
+            // Interactive control buttons
+            ControlButtonsView()
+        }
+    }
+}
 
-                Text("GAS")
-                    .font(.caption)
-                    .foregroundColor(.white.opacity(0.3))
-                    .frame(maxWidth: .infinity)
+// MARK: - Coin Display with Animation
+
+struct CoinDisplayView: View {
+    let coins: Int
+    @State private var previousCoins: Int = 0
+    @State private var showPlusOne = false
+    @State private var coinScale: CGFloat = 1.0
+
+    var body: some View {
+        HStack(spacing: 8) {
+            // Coin icon with gradient and glow
+            ZStack {
+                // Glow effect
+                Circle()
+                    .fill(Color.yellow.opacity(0.3))
+                    .frame(width: 32, height: 32)
+                    .blur(radius: 4)
+
+                // Coin
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            gradient: Gradient(colors: [.yellow, .orange, .yellow]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 24, height: 24)
+                    .overlay(
+                        Text("$")
+                            .font(.caption)
+                            .fontWeight(.bold)
+                            .foregroundColor(.orange)
+                    )
+                    .shadow(color: .orange.opacity(0.5), radius: 2, x: 0, y: 1)
             }
-            .padding(.bottom, 20)
+            .scaleEffect(coinScale)
+
+            // Coin count
+            Text("\(coins)")
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+                .contentTransition(.numericText())
+                .animation(.spring(response: 0.3), value: coins)
+
+            // +1 popup
+            if showPlusOne {
+                Text("+1")
+                    .font(.caption)
+                    .fontWeight(.bold)
+                    .foregroundColor(.yellow)
+                    .transition(.asymmetric(
+                        insertion: .scale.combined(with: .opacity),
+                        removal: .opacity.combined(with: .move(edge: .top))
+                    ))
+            }
+        }
+        .onChange(of: coins) { oldValue, newValue in
+            if newValue > oldValue {
+                // Animate coin collection
+                withAnimation(.spring(response: 0.2, dampingFraction: 0.5)) {
+                    coinScale = 1.3
+                }
+                withAnimation(.spring(response: 0.2).delay(0.1)) {
+                    coinScale = 1.0
+                }
+
+                // Show +1 popup
+                withAnimation(.easeOut(duration: 0.2)) {
+                    showPlusOne = true
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    withAnimation(.easeIn(duration: 0.2)) {
+                        showPlusOne = false
+                    }
+                }
+            }
+            previousCoins = newValue
         }
     }
 }

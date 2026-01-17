@@ -7,9 +7,10 @@
 
 import Foundation
 import CoreMotion
+import Combine
 
 /// Manages all input sources: touch and accelerometer
-class InputManager {
+class InputManager: ObservableObject {
 
     // MARK: - Singleton
 
@@ -20,10 +21,10 @@ class InputManager {
     private let motionManager = CMMotionManager()
 
     /// Current accelerometer Y value (tilt left/right)
-    private(set) var accelerometerY: Double = 0
+    @Published private(set) var accelerometerY: Double = 0
 
     /// Is accelerometer input enabled?
-    private(set) var isAccelerometerEnabled = false
+    @Published private(set) var isAccelerometerEnabled = false
 
     /// Deadzone for accelerometer to prevent jitter
     private let accelerometerDeadzone: Double = 0.05
@@ -34,10 +35,10 @@ class InputManager {
     // MARK: - Input State
 
     /// Is the throttle (gas) being pressed?
-    var isThrottling = false
+    @Published var isThrottling = false
 
     /// Is the brake being pressed?
-    var isBraking = false
+    @Published var isBraking = false
 
     // MARK: - Initialization
 

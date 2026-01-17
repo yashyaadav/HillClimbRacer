@@ -34,6 +34,11 @@ class GameScene: SKScene {
     private var isTiltingLeft = false
     private var isTiltingRight = false
 
+    // MARK: - Sky Color Animation
+
+    private var currentSkyColor: SKColor?
+    private var targetSkyColor: SKColor?
+
     // MARK: - Scene Lifecycle
 
     override func didMove(to view: SKView) {
@@ -44,11 +49,14 @@ class GameScene: SKScene {
     // MARK: - Setup
 
     private func setupScene() {
-        backgroundColor = SKColor(red: 0.4, green: 0.7, blue: 1.0, alpha: 1.0)  // Sky blue
-
         setupPhysicsWorld()
         setupCamera()
         setupTerrain()
+
+        // Set initial sky color from biome
+        currentSkyColor = terrainManager.currentBiome.skyColor
+        backgroundColor = currentSkyColor ?? SKColor(red: 0.4, green: 0.7, blue: 1.0, alpha: 1.0)
+
         setupVehicle()
         setupCameraConstraints()
         setupGameManager()
@@ -125,13 +133,18 @@ class GameScene: SKScene {
         // Update terrain chunks based on vehicle position
         terrainManager.update(playerX: vehicle.chassis.position.x)
 
-        // Update game manager (pass velocity for fuel consumption calculation)
+        // Update sky color based on biome transitions
+        updateSkyColor()
+
+        // Update game manager (pass velocity for fuel consumption and speed calculation)
         let velocityX = vehicle.chassis.physicsBody?.velocity.dx ?? 0
+        let velocityY = vehicle.chassis.physicsBody?.velocity.dy ?? 0
         gameManager.update(
             currentTime: currentTime,
             playerX: vehicle.chassis.position.x,
             isThrottling: isThrottling || inputManager.isThrottling,
-            velocity: velocityX
+            velocity: velocityX,
+            velocityY: velocityY
         )
 
         // Check game over conditions
@@ -146,6 +159,48 @@ class GameScene: SKScene {
 
         // Check if vehicle fell off the world
         gameManager.checkFellOffWorld(y: vehicle.chassis.position.y)
+    }
+
+    // MARK: - Sky Color Updates
+
+    private func updateSkyColor() {
+        let playerX = vehicle.chassis.position.x
+        let newSkyColor = terrainManager.currentSkyColor(at: playerX)
+
+        // Smoothly transition sky color
+        if currentSkyColor != newSkyColor {
+            targetSkyColor = newSkyColor
+
+            // Animate sky color change
+            let colorAction = SKAction.customAction(withDuration: 0.5) { [weak self] _, elapsedTime in
+                guard let self = self,
+                      let current = self.currentSkyColor,
+                      let target = self.targetSkyColor else { return }
+
+                let progress = elapsedTime / 0.5
+                let interpolated = self.interpolateColor(from: current, to: target, t: progress)
+                self.backgroundColor = interpolated
+            }
+
+            run(colorAction) { [weak self] in
+                self?.currentSkyColor = self?.targetSkyColor
+            }
+        }
+    }
+
+    private func interpolateColor(from: SKColor, to: SKColor, t: CGFloat) -> SKColor {
+        var fromR: CGFloat = 0, fromG: CGFloat = 0, fromB: CGFloat = 0, fromA: CGFloat = 0
+        var toR: CGFloat = 0, toG: CGFloat = 0, toB: CGFloat = 0, toA: CGFloat = 0
+
+        from.getRed(&fromR, green: &fromG, blue: &fromB, alpha: &fromA)
+        to.getRed(&toR, green: &toG, blue: &toB, alpha: &toA)
+
+        let r = fromR + (toR - fromR) * t
+        let g = fromG + (toG - fromG) * t
+        let b = fromB + (toB - fromB) * t
+        let a = fromA + (toA - fromA) * t
+
+        return SKColor(red: r, green: g, blue: b, alpha: a)
     }
 
     // MARK: - Accelerometer

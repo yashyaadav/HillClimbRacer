@@ -35,6 +35,12 @@ class GameState: ObservableObject {
     /// Reason for game over
     @Published var gameOverReason: GameOverReason?
 
+    /// Current vehicle speed in km/h-like units
+    @Published var currentSpeed: CGFloat = 0
+
+    /// Current engine RPM (derived from speed)
+    @Published var currentRPM: CGFloat = 0
+
     // MARK: - Computed Properties
 
     /// Integer distance for display
@@ -59,6 +65,8 @@ class GameState: ObservableObject {
         fuel = Constants.Gameplay.startingFuel
         coins = 0
         distance = 0
+        currentSpeed = 0
+        currentRPM = 0
         isPaused = false
         isGameOver = false
         gameOverReason = nil
@@ -113,6 +121,23 @@ class GameState: ObservableObject {
 
         isGameOver = true
         gameOverReason = reason
+    }
+
+    /// Update speed based on vehicle velocity
+    func updateSpeed(velocityX: CGFloat, velocityY: CGFloat = 0) {
+        // Calculate total speed from velocity components
+        let totalVelocity = sqrt(velocityX * velocityX + velocityY * velocityY)
+
+        // Convert to km/h-like display units (scaled for display purposes)
+        let speedScale: CGFloat = 0.2  // Adjust for realistic-looking values
+        currentSpeed = abs(totalVelocity) * speedScale
+
+        // Calculate RPM based on speed (simulated)
+        let maxSpeed: CGFloat = 150
+        let speedRatio = min(currentSpeed / maxSpeed, 1.0)
+        let baseRPM: CGFloat = 1000
+        let maxRPM: CGFloat = 8000
+        currentRPM = baseRPM + (speedRatio * (maxRPM - baseRPM))
     }
 }
 

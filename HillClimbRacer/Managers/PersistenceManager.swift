@@ -32,6 +32,9 @@ class PersistenceManager: ObservableObject {
         static let unlockedVehicles = "unlockedVehicles"
         static let vehicleUpgrades = "vehicleUpgrades"  // [vehicleId: [upgradeType: level]]
         static let vehicleBestDistances = "vehicleBestDistances"  // [vehicleId: distance]
+
+        // Level-related keys
+        static let levelProgress = "levelProgress"  // [levelId: LevelProgress]
     }
 
     // MARK: - Properties
@@ -244,6 +247,36 @@ class PersistenceManager: ObservableObject {
                 bestDistance = distance
             }
         }
+    }
+
+    // MARK: - Level Progress
+
+    /// Load all level progress from storage
+    func loadLevelProgress() -> [String: LevelProgress] {
+        guard let data = defaults.data(forKey: Keys.levelProgress),
+              let decoded = try? JSONDecoder().decode([String: LevelProgress].self, from: data) else {
+            return [:]
+        }
+        return decoded
+    }
+
+    /// Save level progress to storage
+    func saveLevelProgress(_ progress: [String: LevelProgress]) {
+        guard let data = try? JSONEncoder().encode(progress) else { return }
+        defaults.set(data, forKey: Keys.levelProgress)
+    }
+
+    /// Get progress for a specific level
+    func levelProgress(for levelId: String) -> LevelProgress? {
+        let allProgress = loadLevelProgress()
+        return allProgress[levelId]
+    }
+
+    /// Update progress for a specific level
+    func updateLevelProgress(_ progress: LevelProgress) {
+        var allProgress = loadLevelProgress()
+        allProgress[progress.levelId] = progress
+        saveLevelProgress(allProgress)
     }
 
     // MARK: - Reset

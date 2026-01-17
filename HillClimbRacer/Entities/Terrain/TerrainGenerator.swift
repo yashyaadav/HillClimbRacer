@@ -45,12 +45,12 @@ class TerrainGenerator {
     // MARK: - Public Methods
 
     /// Generate terrain points for a chunk starting at the given X position
-    func generateChunk(startX: CGFloat, width: CGFloat) -> [CGPoint] {
+    func generateChunk(startX: CGFloat, width: CGFloat, biome: Biome? = nil) -> [CGPoint] {
         var points: [CGPoint] = []
 
         var x = startX
         while x <= startX + width {
-            let y = generateHeight(at: x)
+            let y = generateHeight(at: x, biome: biome)
             points.append(CGPoint(x: x, y: y))
             x += pointSpacing
         }
@@ -58,18 +58,23 @@ class TerrainGenerator {
         return points
     }
 
-    /// Generate the Y height at a specific X position
-    func generateHeight(at x: CGFloat) -> CGFloat {
+    /// Generate the Y height at a specific X position with optional biome modifiers
+    func generateHeight(at x: CGFloat, biome: Biome? = nil) -> CGFloat {
         var y = baseHeight
 
-        // Large rolling hills
-        y += sin(x * largeHillFrequency) * largeHillAmplitude
+        // Get biome modifiers (default to 1.0 if no biome)
+        let amplitudeMultiplier = biome?.hillAmplitudeMultiplier ?? 1.0
+        let frequencyMultiplier = biome?.hillFrequencyMultiplier ?? 1.0
+        let noiseMultiplier = biome?.noiseAmplitudeMultiplier ?? 1.0
 
-        // Medium variation
-        y += sin(x * mediumHillFrequency) * mediumHillAmplitude
+        // Large rolling hills (modified by biome)
+        y += sin(x * largeHillFrequency * frequencyMultiplier) * largeHillAmplitude * amplitudeMultiplier
 
-        // Fine detail from Perlin noise
-        y += noise.noise(x * noiseFrequency) * noiseAmplitude
+        // Medium variation (modified by biome)
+        y += sin(x * mediumHillFrequency * frequencyMultiplier) * mediumHillAmplitude * amplitudeMultiplier
+
+        // Fine detail from Perlin noise (modified by biome)
+        y += noise.noise(x * noiseFrequency) * noiseAmplitude * noiseMultiplier
 
         // Gradual difficulty increase (hills get bigger as you go further)
         let difficultyMultiplier = 1.0 + (x / difficultyScale)
@@ -82,7 +87,7 @@ class TerrainGenerator {
     }
 
     /// Generate a flat starting area for the player
-    func generateStartingArea(width: CGFloat) -> [CGPoint] {
+    func generateStartingArea(width: CGFloat, biome: Biome? = nil) -> [CGPoint] {
         var points: [CGPoint] = []
 
         var x: CGFloat = 0
@@ -92,7 +97,7 @@ class TerrainGenerator {
             if x > width * 0.7 {
                 // Smooth transition to regular terrain
                 let t = (x - width * 0.7) / (width * 0.3)
-                let targetY = generateHeight(at: x)
+                let targetY = generateHeight(at: x, biome: biome)
                 y = baseHeight + t * (targetY - baseHeight)
             }
             points.append(CGPoint(x: x, y: y))

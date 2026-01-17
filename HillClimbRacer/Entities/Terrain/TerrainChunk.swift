@@ -23,12 +23,23 @@ class TerrainChunk: SKNode {
     /// Points defining the top surface of the terrain
     let surfacePoints: [CGPoint]
 
+    /// The biome this chunk belongs to
+    let biome: Biome
+
     // MARK: - Initialization
 
-    init(startX: CGFloat, points: [CGPoint], groundDepth: CGFloat = Constants.Terrain.groundDepth) {
+    init(
+        startX: CGFloat,
+        points: [CGPoint],
+        groundDepth: CGFloat = Constants.Terrain.groundDepth,
+        biome: Biome = BiomeDefinitions.defaultBiome,
+        fillColor: SKColor? = nil,
+        strokeColor: SKColor? = nil
+    ) {
         self.startX = startX
         self.endX = points.last?.x ?? startX
         self.surfacePoints = points
+        self.biome = biome
 
         // Create the terrain shape path
         let path = CGMutablePath()
@@ -45,10 +56,10 @@ class TerrainChunk: SKNode {
         path.addLine(to: CGPoint(x: points.last!.x, y: -groundDepth))
         path.closeSubpath()
 
-        // Create shape node
+        // Create shape node with biome colors (or custom colors if provided)
         shapeNode = SKShapeNode(path: path)
-        shapeNode.fillColor = SKColor(red: 0.4, green: 0.26, blue: 0.13, alpha: 1.0)  // Brown
-        shapeNode.strokeColor = SKColor(red: 0.2, green: 0.6, blue: 0.2, alpha: 1.0)  // Green top
+        shapeNode.fillColor = fillColor ?? biome.terrainFillColor
+        shapeNode.strokeColor = strokeColor ?? biome.terrainStrokeColor
         shapeNode.lineWidth = 4
         shapeNode.zPosition = Constants.ZPosition.terrain
 

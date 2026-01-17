@@ -92,22 +92,59 @@ struct FuelGaugeView: View {
     let fuel: CGFloat
     @State private var isPulsing = false
 
-    var body: some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .leading) {
-                // Background
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color.black.opacity(0.5))
+    private let gaugeWidth: CGFloat = 120
+    private let gaugeHeight: CGFloat = 20
 
-                // Fuel level
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(fuelColor)
-                    .frame(width: geometry.size.width * (fuel / 100.0))
+    var body: some View {
+        HStack(spacing: 8) {
+            // Fuel pump icon
+            Image(systemName: "fuelpump.fill")
+                .font(.system(size: 16, weight: .bold))
+                .foregroundColor(fuelColor)
+
+            // Gauge container
+            ZStack(alignment: .leading) {
+                // Background with tick marks
+                GeometryReader { geometry in
+                    ZStack(alignment: .leading) {
+                        // Background
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(Color.black.opacity(0.5))
+
+                        // Fuel level with gradient
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(fuelGradient)
+                            .frame(width: max(0, geometry.size.width * (fuel / 100.0)))
+
+                        // Tick marks
+                        HStack(spacing: 0) {
+                            ForEach(0..<5) { i in
+                                Spacer()
+                                if i < 4 {
+                                    Rectangle()
+                                        .fill(Color.white.opacity(0.3))
+                                        .frame(width: 1, height: geometry.size.height * 0.4)
+                                }
+                            }
+                        }
+
+                        // Gauge border
+                        RoundedRectangle(cornerRadius: 4)
+                            .strokeBorder(Color.white.opacity(0.3), lineWidth: 1)
+                    }
+                }
+                .frame(width: gaugeWidth, height: gaugeHeight)
             }
+
+            // Percentage text
+            Text("\(Int(fuel))%")
+                .font(.caption)
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+                .frame(width: 35, alignment: .trailing)
         }
-        .frame(width: 100, height: 16)
-        // Pulsing effect when fuel is critically low (< 20%) - Unity pattern
-        .opacity(isLowFuel ? (isPulsing ? 0.4 : 1.0) : 1.0)
+        // Pulsing effect when fuel is critically low (< 20%)
+        .opacity(isLowFuel ? (isPulsing ? 0.5 : 1.0) : 1.0)
         .animation(isLowFuel ? .easeInOut(duration: 0.3).repeatForever(autoreverses: true) : .default, value: isPulsing)
         .onAppear { isPulsing = true }
         .onChange(of: fuel) { isPulsing = true }
@@ -125,6 +162,19 @@ struct FuelGaugeView: View {
         } else {
             return .red
         }
+    }
+
+    private var fuelGradient: LinearGradient {
+        let baseColor = fuelColor
+        return LinearGradient(
+            gradient: Gradient(colors: [
+                baseColor.opacity(0.8),
+                baseColor,
+                baseColor.opacity(0.9)
+            ]),
+            startPoint: .top,
+            endPoint: .bottom
+        )
     }
 }
 
