@@ -2,7 +2,7 @@
 //  GarageView.swift
 //  HillClimbRacer
 //
-//  Vehicle selection and upgrade screen.
+//  Vehicle selection and upgrade screen with adaptive layout.
 //
 
 import SwiftUI
@@ -24,36 +24,45 @@ struct GarageView: View {
     }
 
     var body: some View {
-        ZStack {
-            // Background
-            LinearGradient(
-                colors: [
-                    Color(red: 0.15, green: 0.15, blue: 0.2),
-                    Color(red: 0.1, green: 0.1, blue: 0.15)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
+        GeometryReader { geometry in
+            let isCompact = geometry.size.height < 700
+            let spacing: CGFloat = isCompact ? 10 : 16
 
-            VStack(spacing: 16) {
-                // Header
-                headerView
+            ZStack {
+                // Background
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.15, green: 0.15, blue: 0.2),
+                        Color(red: 0.1, green: 0.1, blue: 0.15)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .ignoresSafeArea()
 
-                // Vehicle carousel
-                vehicleCarousel
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: spacing) {
+                        // Header
+                        headerView
 
-                // Vehicle info
-                vehicleInfoView
+                        // Vehicle carousel
+                        vehicleCarousel(isCompact: isCompact)
 
-                // Upgrade section (only for unlocked vehicles)
-                if persistence.isVehicleUnlocked(selectedVehicle.id) {
-                    upgradeSection
+                        // Vehicle info
+                        vehicleInfoView(isCompact: isCompact)
+
+                        // Upgrade section (only for unlocked vehicles)
+                        if persistence.isVehicleUnlocked(selectedVehicle.id) {
+                            upgradeSection(isCompact: isCompact)
+                        }
+
+                        // Bottom padding for safe area
+                        Spacer()
+                            .frame(height: geometry.safeAreaInsets.bottom + 20)
+                    }
+                    .padding(.top)
                 }
-
-                Spacer()
             }
-            .padding(.top)
         }
         .onAppear {
             // Set initial selection to currently selected vehicle
@@ -97,11 +106,9 @@ struct GarageView: View {
 
             Spacer()
 
-            // Coins display
+            // Coins display with metal style
             HStack(spacing: 4) {
-                Circle()
-                    .fill(Color.yellow)
-                    .frame(width: 20, height: 20)
+                CoinIcon(size: 20)
                 Text("\(persistence.totalCoins)")
                     .foregroundColor(.white)
                     .fontWeight(.bold)
@@ -112,11 +119,13 @@ struct GarageView: View {
 
     // MARK: - Vehicle Carousel
 
-    private var vehicleCarousel: some View {
-        HStack(spacing: 20) {
+    private func vehicleCarousel(isCompact: Bool) -> some View {
+        let height: CGFloat = isCompact ? 120 : 160
+
+        return HStack(spacing: 20) {
             // Previous button
             Button(action: {
-                withAnimation {
+                withAnimation(.spring(response: 0.3)) {
                     selectedVehicleIndex = (selectedVehicleIndex - 1 + vehicles.count) % vehicles.count
                 }
             }) {
@@ -127,33 +136,46 @@ struct GarageView: View {
 
             // Vehicle preview
             ZStack {
+                // Background with subtle glow
                 RoundedRectangle(cornerRadius: 16)
-                    .fill(Color.white.opacity(0.1))
-                    .frame(height: 140)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color.white.opacity(0.15),
+                                Color.white.opacity(0.05)
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .shadow(color: selectedVehicle.chassisColor.color.opacity(0.3), radius: 10)
 
-                VStack {
-                    // Vehicle visual
-                    vehiclePreview(for: selectedVehicle)
+                VStack(spacing: 8) {
+                    // Enhanced vehicle visual
+                    EnhancedVehiclePreview(vehicle: selectedVehicle, scale: isCompact ? 0.8 : 1.0)
 
                     // Lock icon for locked vehicles
                     if !persistence.isVehicleUnlocked(selectedVehicle.id) {
                         HStack(spacing: 4) {
                             Image(systemName: "lock.fill")
                             Text("\(selectedVehicle.unlockCost)")
-                            Circle()
-                                .fill(Color.yellow)
-                                .frame(width: 12, height: 12)
+                            CoinIcon(size: 12)
                         }
                         .foregroundColor(.orange)
                         .font(.caption)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 4)
+                        .background(Color.black.opacity(0.3))
+                        .cornerRadius(8)
                     }
                 }
             }
+            .frame(height: height)
             .frame(maxWidth: .infinity)
 
             // Next button
             Button(action: {
-                withAnimation {
+                withAnimation(.spring(response: 0.3)) {
                     selectedVehicleIndex = (selectedVehicleIndex + 1) % vehicles.count
                 }
             }) {
@@ -165,32 +187,12 @@ struct GarageView: View {
         .padding(.horizontal)
     }
 
-    private func vehiclePreview(for vehicle: VehicleConfig) -> some View {
-        HStack(spacing: vehicle.wheelBase / 5) {
-            // Rear wheel
-            Circle()
-                .fill(vehicle.wheelColor.color)
-                .frame(width: vehicle.wheelRadius * 1.5, height: vehicle.wheelRadius * 1.5)
-
-            // Chassis
-            RoundedRectangle(cornerRadius: 6)
-                .fill(vehicle.chassisColor.color)
-                .frame(width: vehicle.chassisSize.width * 0.6, height: vehicle.chassisSize.height * 0.6)
-                .offset(y: -10)
-
-            // Front wheel
-            Circle()
-                .fill(vehicle.wheelColor.color)
-                .frame(width: vehicle.wheelRadius * 1.5, height: vehicle.wheelRadius * 1.5)
-        }
-    }
-
     // MARK: - Vehicle Info
 
-    private var vehicleInfoView: some View {
-        VStack(spacing: 8) {
+    private func vehicleInfoView(isCompact: Bool) -> some View {
+        VStack(spacing: isCompact ? 6 : 8) {
             Text(selectedVehicle.name)
-                .font(.title2)
+                .font(isCompact ? .title3 : .title2)
                 .fontWeight(.bold)
                 .foregroundColor(.white)
 
@@ -198,36 +200,59 @@ struct GarageView: View {
                 .font(.caption)
                 .foregroundColor(.white.opacity(0.7))
                 .multilineTextAlignment(.center)
+                .lineLimit(2)
 
             // Stats bars
-            VStack(spacing: 6) {
+            VStack(spacing: isCompact ? 4 : 6) {
                 let stats = selectedVehicle.normalizedStats
-                StatBar(label: "Speed", value: stats.speed, color: .red)
-                StatBar(label: "Power", value: stats.power, color: .orange)
-                StatBar(label: "Fuel", value: stats.fuel, color: .green)
-                StatBar(label: "Handling", value: stats.handling, color: .blue)
+                EnhancedStatBar(label: "Speed", value: stats.speed, color: .red, icon: "speedometer")
+                EnhancedStatBar(label: "Power", value: stats.power, color: .orange, icon: "bolt.fill")
+                EnhancedStatBar(label: "Fuel", value: stats.fuel, color: .green, icon: "fuelpump.fill")
+                EnhancedStatBar(label: "Handling", value: stats.handling, color: .blue, icon: "steeringwheel")
             }
-            .padding(.horizontal, 40)
-            .padding(.top, 8)
+            .padding(.horizontal, isCompact ? 20 : 40)
+            .padding(.top, isCompact ? 4 : 8)
 
             // Select/Unlock button
+            actionButton
+        }
+        .padding(isCompact ? 12 : 16)
+        .background(Color.white.opacity(0.05))
+        .cornerRadius(12)
+        .padding(.horizontal)
+    }
+
+    private var actionButton: some View {
+        Group {
             if persistence.isVehicleUnlocked(selectedVehicle.id) {
                 if persistence.selectedVehicleId == selectedVehicle.id {
-                    Text("SELECTED")
-                        .font(.caption)
-                        .foregroundColor(.green)
-                        .padding(.vertical, 8)
+                    HStack(spacing: 6) {
+                        Image(systemName: "checkmark.circle.fill")
+                        Text("SELECTED")
+                    }
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.green)
+                    .padding(.vertical, 8)
                 } else {
                     Button(action: {
                         persistence.selectedVehicleId = selectedVehicle.id
+                        AudioManager.shared.playSound(.buttonTap)
                     }) {
                         Text("SELECT")
                             .fontWeight(.bold)
                             .foregroundColor(.white)
-                            .padding(.horizontal, 24)
-                            .padding(.vertical, 8)
-                            .background(Color.blue)
-                            .cornerRadius(8)
+                            .padding(.horizontal, 32)
+                            .padding(.vertical, 10)
+                            .background(
+                                LinearGradient(
+                                    colors: [Color.blue, Color.blue.opacity(0.7)],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                            .cornerRadius(10)
+                            .shadow(color: Color.blue.opacity(0.4), radius: 4, y: 2)
                     }
                 }
             } else {
@@ -238,41 +263,44 @@ struct GarageView: View {
                         showInsufficientFundsAlert = true
                     }
                 }) {
-                    HStack {
+                    HStack(spacing: 6) {
                         Image(systemName: "lock.open.fill")
                         Text("UNLOCK")
                         Text("\(selectedVehicle.unlockCost)")
-                        Circle()
-                            .fill(Color.yellow)
-                            .frame(width: 12, height: 12)
+                        CoinIcon(size: 14)
                     }
                     .fontWeight(.bold)
                     .foregroundColor(.white)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
-                    .background(Color.orange)
-                    .cornerRadius(8)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(
+                        LinearGradient(
+                            colors: [Color.orange, Color.orange.opacity(0.7)],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .cornerRadius(10)
+                    .shadow(color: Color.orange.opacity(0.4), radius: 4, y: 2)
                 }
             }
         }
-        .padding()
-        .background(Color.white.opacity(0.05))
-        .cornerRadius(12)
-        .padding(.horizontal)
+        .padding(.top, 4)
     }
 
     // MARK: - Upgrade Section
 
-    private var upgradeSection: some View {
-        VStack(spacing: 12) {
+    private func upgradeSection(isCompact: Bool) -> some View {
+        VStack(spacing: isCompact ? 8 : 12) {
             // Upgrade category tabs
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
+                HStack(spacing: isCompact ? 8 : 12) {
                     ForEach(UpgradeType.allCases, id: \.self) { upgrade in
                         UpgradeCategoryButton(
                             upgrade: upgrade,
                             isSelected: selectedUpgrade == upgrade,
-                            level: persistence.upgradeLevel(for: selectedVehicle.id, upgradeType: upgrade)
+                            level: persistence.upgradeLevel(for: selectedVehicle.id, upgradeType: upgrade),
+                            isCompact: isCompact
                         ) {
                             selectedUpgrade = upgrade
                         }
@@ -285,6 +313,7 @@ struct GarageView: View {
             UpgradeDetailView(
                 upgradeType: selectedUpgrade,
                 vehicleId: selectedVehicle.id,
+                isCompact: isCompact,
                 onUpgrade: { success in
                     if !success {
                         showInsufficientFundsAlert = true
@@ -295,30 +324,238 @@ struct GarageView: View {
     }
 }
 
-// MARK: - Stat Bar
+// MARK: - Enhanced Vehicle Preview
 
-struct StatBar: View {
+struct EnhancedVehiclePreview: View {
+    let vehicle: VehicleConfig
+    var scale: CGFloat = 1.0
+
+    var body: some View {
+        ZStack {
+            // Shadow underneath
+            Ellipse()
+                .fill(Color.black.opacity(0.3))
+                .frame(width: 100 * scale, height: 15 * scale)
+                .offset(y: 30 * scale)
+                .blur(radius: 5)
+
+            HStack(spacing: vehicle.wheelBase / 5 * scale) {
+                // Rear wheel with detail
+                WheelView(
+                    radius: vehicle.wheelRadius * 1.3 * scale,
+                    color: vehicle.wheelColor.color,
+                    hubColor: Color.gray
+                )
+
+                // Enhanced chassis
+                ChassisView(
+                    size: CGSize(
+                        width: vehicle.chassisSize.width * 0.55 * scale,
+                        height: vehicle.chassisSize.height * 0.55 * scale
+                    ),
+                    color: vehicle.chassisColor.color,
+                    vehicleType: vehicle.id
+                )
+                .offset(y: -8 * scale)
+
+                // Front wheel with detail
+                WheelView(
+                    radius: vehicle.wheelRadius * 1.3 * scale,
+                    color: vehicle.wheelColor.color,
+                    hubColor: Color.gray
+                )
+            }
+        }
+    }
+}
+
+// MARK: - Wheel View with Details
+
+struct WheelView: View {
+    let radius: CGFloat
+    let color: Color
+    let hubColor: Color
+
+    var body: some View {
+        ZStack {
+            // Tire
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [color, color.opacity(0.7)],
+                        center: .center,
+                        startRadius: 0,
+                        endRadius: radius
+                    )
+                )
+                .frame(width: radius, height: radius)
+                .shadow(color: .black.opacity(0.4), radius: 3, y: 2)
+
+            // Tire tread pattern (ring)
+            Circle()
+                .stroke(color.opacity(0.6), lineWidth: radius * 0.15)
+                .frame(width: radius * 0.85, height: radius * 0.85)
+
+            // Hub cap
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [Color.white.opacity(0.9), hubColor],
+                        center: .topLeading,
+                        startRadius: 0,
+                        endRadius: radius * 0.4
+                    )
+                )
+                .frame(width: radius * 0.45, height: radius * 0.45)
+
+            // Hub highlight
+            Circle()
+                .fill(Color.white.opacity(0.4))
+                .frame(width: radius * 0.2, height: radius * 0.2)
+                .offset(x: -radius * 0.08, y: -radius * 0.08)
+
+            // Spokes (simplified)
+            ForEach(0..<5) { i in
+                Rectangle()
+                    .fill(hubColor.opacity(0.7))
+                    .frame(width: 2, height: radius * 0.3)
+                    .offset(y: -radius * 0.15)
+                    .rotationEffect(.degrees(Double(i) * 72))
+            }
+        }
+    }
+}
+
+// MARK: - Chassis View with Details
+
+struct ChassisView: View {
+    let size: CGSize
+    let color: Color
+    let vehicleType: String
+
+    var body: some View {
+        ZStack {
+            // Main body with gradient
+            RoundedRectangle(cornerRadius: size.height * 0.2)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            color.opacity(0.95),
+                            color,
+                            color.opacity(0.8)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .frame(width: size.width, height: size.height)
+                .shadow(color: .black.opacity(0.3), radius: 4, y: 3)
+
+            // Top highlight
+            RoundedRectangle(cornerRadius: size.height * 0.2)
+                .fill(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.4), Color.clear],
+                        startPoint: .top,
+                        endPoint: .center
+                    )
+                )
+                .frame(width: size.width, height: size.height)
+
+            // Window (dark area)
+            RoundedRectangle(cornerRadius: 4)
+                .fill(
+                    LinearGradient(
+                        colors: [Color.blue.opacity(0.6), Color.blue.opacity(0.3)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .frame(width: size.width * 0.35, height: size.height * 0.4)
+                .offset(x: size.width * 0.1, y: -size.height * 0.15)
+
+            // Headlight
+            Circle()
+                .fill(Color.yellow.opacity(0.9))
+                .frame(width: size.width * 0.08, height: size.width * 0.08)
+                .offset(x: size.width * 0.4, y: size.height * 0.1)
+                .shadow(color: .yellow.opacity(0.5), radius: 3)
+
+            // Taillight
+            Circle()
+                .fill(Color.red.opacity(0.9))
+                .frame(width: size.width * 0.06, height: size.width * 0.06)
+                .offset(x: -size.width * 0.4, y: size.height * 0.1)
+        }
+    }
+}
+
+// MARK: - Coin Icon
+
+struct CoinIcon: View {
+    let size: CGFloat
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [Color.yellow, Color.orange],
+                        center: .topLeading,
+                        startRadius: 0,
+                        endRadius: size
+                    )
+                )
+                .frame(width: size, height: size)
+
+            Circle()
+                .stroke(Color.orange.opacity(0.6), lineWidth: size * 0.1)
+                .frame(width: size * 0.7, height: size * 0.7)
+
+            Text("$")
+                .font(.system(size: size * 0.5, weight: .bold))
+                .foregroundColor(Color.orange.opacity(0.8))
+        }
+    }
+}
+
+// MARK: - Enhanced Stat Bar
+
+struct EnhancedStatBar: View {
     let label: String
     let value: Int
     let color: Color
+    let icon: String
 
     var body: some View {
         HStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.caption2)
+                .foregroundColor(color)
+                .frame(width: 16)
+
             Text(label)
                 .font(.caption)
                 .foregroundColor(.white.opacity(0.7))
-                .frame(width: 60, alignment: .leading)
+                .frame(width: 55, alignment: .leading)
 
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
-                    Rectangle()
-                        .fill(Color.white.opacity(0.2))
-                        .cornerRadius(4)
+                    // Background
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(Color.white.opacity(0.15))
 
-                    Rectangle()
-                        .fill(color)
-                        .cornerRadius(4)
+                    // Fill with gradient
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(
+                            LinearGradient(
+                                colors: [color, color.opacity(0.7)],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
                         .frame(width: geo.size.width * CGFloat(value) / 100)
+                        .shadow(color: color.opacity(0.5), radius: 2)
                 }
             }
             .frame(height: 8)
@@ -326,8 +563,20 @@ struct StatBar: View {
             Text("\(value)")
                 .font(.caption)
                 .foregroundColor(.white)
-                .frame(width: 30, alignment: .trailing)
+                .frame(width: 28, alignment: .trailing)
         }
+    }
+}
+
+// MARK: - Stat Bar (Legacy compatibility)
+
+struct StatBar: View {
+    let label: String
+    let value: Int
+    let color: Color
+
+    var body: some View {
+        EnhancedStatBar(label: label, value: value, color: color, icon: "circle.fill")
     }
 }
 
@@ -364,30 +613,35 @@ struct UpgradeCategoryButton: View {
     let upgrade: UpgradeType
     let isSelected: Bool
     let level: Int
+    var isCompact: Bool = false
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 6) {
+            VStack(spacing: isCompact ? 4 : 6) {
                 Image(systemName: upgrade.icon)
-                    .font(.title3)
+                    .font(isCompact ? .body : .title3)
 
                 Text(upgrade.rawValue)
                     .font(.caption2)
+                    .lineLimit(1)
 
                 // Level indicator
                 HStack(spacing: 2) {
                     ForEach(1...Constants.Upgrades.maxLevel, id: \.self) { lvl in
                         Circle()
                             .fill(lvl <= level ? Color.green : Color.gray.opacity(0.3))
-                            .frame(width: 6, height: 6)
+                            .frame(width: isCompact ? 5 : 6, height: isCompact ? 5 : 6)
                     }
                 }
             }
             .foregroundColor(isSelected ? .yellow : .white)
-            .frame(width: 80, height: 80)
-            .background(isSelected ? Color.yellow.opacity(0.2) : Color.white.opacity(0.1))
-            .cornerRadius(10)
+            .frame(width: isCompact ? 70 : 80, height: isCompact ? 70 : 80)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(isSelected ? Color.yellow.opacity(0.2) : Color.white.opacity(0.1))
+                    .shadow(color: isSelected ? Color.yellow.opacity(0.3) : Color.clear, radius: 4)
+            )
         }
     }
 }
@@ -397,6 +651,7 @@ struct UpgradeCategoryButton: View {
 struct UpgradeDetailView: View {
     let upgradeType: UpgradeType
     let vehicleId: String
+    var isCompact: Bool = false
     let onUpgrade: (Bool) -> Void
 
     @ObservedObject private var persistence = PersistenceManager.shared
@@ -418,18 +673,23 @@ struct UpgradeDetailView: View {
     }
 
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: isCompact ? 8 : 12) {
             Text(upgradeType.description)
                 .foregroundColor(.white.opacity(0.7))
                 .font(.caption)
 
-            // Level indicator
-            HStack(spacing: 8) {
+            // Level indicator with progress bar style
+            HStack(spacing: isCompact ? 6 : 8) {
                 ForEach(1...maxLevel, id: \.self) { level in
                     Rectangle()
-                        .fill(level <= currentLevel ? Color.green : Color.gray.opacity(0.3))
-                        .frame(width: 36, height: 16)
+                        .fill(
+                            level <= currentLevel
+                                ? LinearGradient(colors: [.green, .green.opacity(0.7)], startPoint: .top, endPoint: .bottom)
+                                : LinearGradient(colors: [Color.gray.opacity(0.3), Color.gray.opacity(0.2)], startPoint: .top, endPoint: .bottom)
+                        )
+                        .frame(width: isCompact ? 30 : 36, height: isCompact ? 14 : 16)
                         .cornerRadius(4)
+                        .shadow(color: level <= currentLevel ? Color.green.opacity(0.3) : Color.clear, radius: 2)
                 }
             }
 
@@ -450,27 +710,36 @@ struct UpgradeDetailView: View {
                         Text("UPGRADE")
                             .fontWeight(.bold)
 
-                        Circle()
-                            .fill(Color.yellow)
-                            .frame(width: 14, height: 14)
+                        CoinIcon(size: 16)
 
                         Text("\(upgradeCost)")
                     }
                     .foregroundColor(.white)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 10)
-                    .background(canAfford ? Color.green : Color.gray)
+                    .padding(.horizontal, isCompact ? 16 : 20)
+                    .padding(.vertical, isCompact ? 8 : 10)
+                    .background(
+                        LinearGradient(
+                            colors: canAfford ? [.green, .green.opacity(0.7)] : [.gray, .gray.opacity(0.7)],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
                     .cornerRadius(8)
+                    .shadow(color: canAfford ? Color.green.opacity(0.4) : Color.clear, radius: 4, y: 2)
                 }
                 .disabled(!canAfford)
             } else {
-                Text("MAX LEVEL")
-                    .foregroundColor(.yellow)
-                    .fontWeight(.bold)
-                    .padding(.vertical, 10)
+                HStack(spacing: 6) {
+                    Image(systemName: "star.fill")
+                    Text("MAX LEVEL")
+                    Image(systemName: "star.fill")
+                }
+                .foregroundColor(.yellow)
+                .fontWeight(.bold)
+                .padding(.vertical, 10)
             }
         }
-        .padding()
+        .padding(isCompact ? 12 : 16)
         .background(Color.white.opacity(0.05))
         .cornerRadius(12)
         .padding(.horizontal)

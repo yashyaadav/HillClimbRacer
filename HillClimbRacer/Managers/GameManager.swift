@@ -82,6 +82,13 @@ class GameManager: ObservableObject {
     func endGame(reason: GameOverReason) {
         gameState.triggerGameOver(reason: reason)
         InputManager.shared.stopAccelerometer()
+
+        // Persist collected coins from endless mode
+        PersistenceManager.shared.addCoins(gameState.coins)
+
+        // Update best distance
+        PersistenceManager.shared.updateBestDistance(gameState.distance)
+
         currentScreen = .gameOver
     }
 

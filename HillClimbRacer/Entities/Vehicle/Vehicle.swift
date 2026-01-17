@@ -157,6 +157,23 @@ class Vehicle: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - State Detection
+
+    /// Velocity threshold for considering the vehicle stationary
+    private let stationaryThreshold: CGFloat = 30
+
+    /// Check if the vehicle is nearly stationary
+    var isStationary: Bool {
+        guard let velocity = chassis.physicsBody?.velocity else { return true }
+        return abs(velocity.dx) < stationaryThreshold
+    }
+
+    /// Check if the vehicle is moving forward
+    var isMovingForward: Bool {
+        guard let velocity = chassis.physicsBody?.velocity else { return false }
+        return velocity.dx > stationaryThreshold
+    }
+
     // MARK: - Movement Controls
 
     /// Apply forward thrust to the wheels
@@ -192,12 +209,23 @@ class Vehicle: SKNode {
         limitSpeed()
     }
 
-    /// Apply brakes to stop the vehicle
+    /// Apply brakes to stop the vehicle, or reverse when stationary/moving backward
     func applyBrake() {
-        // Only brake the rear wheel (like a real vehicle)
-        if rearWheel.isBreakable {
-            rearWheel.physicsBody?.angularVelocity = 0
-            rearWheel.physicsBody?.velocity = .zero
+        if isMovingForward {
+            // Gradual braking when moving forward
+            rearWheel.physicsBody?.angularVelocity *= 0.85
+            frontWheel.physicsBody?.angularVelocity *= 0.85
+
+            // Reduce wheel velocity
+            if let rearVel = rearWheel.physicsBody?.velocity {
+                rearWheel.physicsBody?.velocity = CGVector(dx: rearVel.dx * 0.9, dy: rearVel.dy)
+            }
+            if let frontVel = frontWheel.physicsBody?.velocity {
+                frontWheel.physicsBody?.velocity = CGVector(dx: frontVel.dx * 0.9, dy: frontVel.dy)
+            }
+        } else {
+            // When stationary or already moving backward, apply reverse
+            moveBackward()
         }
     }
 

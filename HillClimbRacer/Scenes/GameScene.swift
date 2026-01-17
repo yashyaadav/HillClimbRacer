@@ -133,6 +133,11 @@ class GameScene: SKScene {
         // Update terrain chunks based on vehicle position
         terrainManager.update(playerX: vehicle.chassis.position.x)
 
+        // Safety check: force terrain generation if player is approaching edge
+        if vehicle.chassis.position.x > terrainManager.lastGeneratedX - 800 {
+            terrainManager.update(playerX: vehicle.chassis.position.x + 1000)
+        }
+
         // Update sky color based on biome transitions
         updateSkyColor()
 

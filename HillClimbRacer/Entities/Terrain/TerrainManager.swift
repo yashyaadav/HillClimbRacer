@@ -22,14 +22,17 @@ class TerrainManager: ObservableObject {
     /// Width of each terrain chunk
     private let chunkWidth: CGFloat
 
-    /// How far ahead to generate terrain
-    private let loadAheadDistance: CGFloat = 1500
+    /// How far ahead to generate terrain (increased for safety buffer)
+    private let loadAheadDistance: CGFloat = 2500
 
     /// How far behind to keep terrain before unloading
     private let unloadBehindDistance: CGFloat = 800
 
     /// Track the furthest X we've generated
     private var generatedUpToX: CGFloat = 0
+
+    /// Public accessor for terrain generation progress (used for safety checks)
+    var lastGeneratedX: CGFloat { generatedUpToX }
 
     // MARK: - Biome Properties
 

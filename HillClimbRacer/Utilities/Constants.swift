@@ -63,8 +63,8 @@ enum Constants {
 
     enum Gameplay {
         static let startingFuel: CGFloat = 100.0
-        static let fuelDrainRate: CGFloat = 1.0      // per second
-        static let throttleFuelMultiplier: CGFloat = 2.0
+        static let fuelDrainRate: CGFloat = 2.5      // per second (increased for noticeable drain)
+        static let throttleFuelMultiplier: CGFloat = 1.5  // reduced to balance with higher base rate
         static let fuelCanRefill: CGFloat = 30.0
 
         static let coinValue: Int = 1
