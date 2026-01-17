@@ -1,0 +1,585 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2209D4612F1B822800334857 /* game_over.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2209D4592F1B822800334857 /* game_over.wav */; };
+		2209D4622F1B822800334857 /* fuel_collect.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2209D4582F1B822800334857 /* fuel_collect.wav */; };
+		2209D4632F1B822800334857 /* jump.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2209D45B2F1B822800334857 /* jump.wav */; };
+		2209D4642F1B822800334857 /* engine_rev.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2209D4572F1B822800334857 /* engine_rev.wav */; };
+		2209D4652F1B822800334857 /* engine_idle.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2209D4562F1B822800334857 /* engine_idle.wav */; };
+		2209D4662F1B822800334857 /* upgrade.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2209D45F2F1B822800334857 /* upgrade.wav */; };
+		2209D4672F1B822800334857 /* gameplay_music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2209D45A2F1B822800334857 /* gameplay_music.mp3 */; };
+		2209D4682F1B822800334857 /* crash.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2209D4552F1B822800334857 /* crash.wav */; };
+		2209D4692F1B822800334857 /* menu_music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2209D45D2F1B822800334857 /* menu_music.mp3 */; };
+		2209D46A2F1B822800334857 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2209D45E2F1B822800334857 /* README.txt */; };
+		2209D46B2F1B822800334857 /* coin_collect.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2209D4542F1B822800334857 /* coin_collect.wav */; };
+		2209D46C2F1B822800334857 /* land.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2209D45C2F1B822800334857 /* land.wav */; };
+		2209D46D2F1B822800334857 /* button_tap.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2209D4532F1B822800334857 /* button_tap.wav */; };
+		A1000001001 /* HillClimbRacerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001000 /* HillClimbRacerApp.swift */; };
+		A1000002001 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000002000 /* ContentView.swift */; };
+		A1000003001 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000003000 /* GameScene.swift */; };
+		A1000004001 /* Vehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000004000 /* Vehicle.swift */; };
+		A1000005001 /* ChassisNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000005000 /* ChassisNode.swift */; };
+		A1000006001 /* WheelNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000006000 /* WheelNode.swift */; };
+		A1000007001 /* WheelSuspension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000007000 /* WheelSuspension.swift */; };
+		A1000008001 /* TerrainChunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000008000 /* TerrainChunk.swift */; };
+		A1000009001 /* TerrainGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000009000 /* TerrainGenerator.swift */; };
+		A1000010001 /* TerrainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000010000 /* TerrainManager.swift */; };
+		A1000011001 /* PhysicsCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000011000 /* PhysicsCategories.swift */; };
+		A1000012001 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000012000 /* Constants.swift */; };
+		A1000013001 /* PerlinNoise.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000013000 /* PerlinNoise.swift */; };
+		A1000014001 /* HUDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000014000 /* HUDView.swift */; };
+		A1000015001 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000015000 /* GameState.swift */; };
+		A1000016001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1000016000 /* Assets.xcassets */; };
+		A1000017001 /* CoinNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000017000 /* CoinNode.swift */; };
+		A1000018001 /* FuelCanNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000018000 /* FuelCanNode.swift */; };
+		A1000019001 /* InputManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000019000 /* InputManager.swift */; };
+		A1000020001 /* GameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000020000 /* GameManager.swift */; };
+		A1000021001 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000021000 /* AudioManager.swift */; };
+		A1000022001 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000022000 /* PersistenceManager.swift */; };
+		A1000023001 /* MainMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000023000 /* MainMenuView.swift */; };
+		A1000024001 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000024000 /* GameOverView.swift */; };
+		A1000025001 /* PauseMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000025000 /* PauseMenuView.swift */; };
+		A1000026001 /* GarageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000026000 /* GarageView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2209D4532F1B822800334857 /* button_tap.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = button_tap.wav; sourceTree = "<group>"; };
+		2209D4542F1B822800334857 /* coin_collect.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = coin_collect.wav; sourceTree = "<group>"; };
+		2209D4552F1B822800334857 /* crash.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = crash.wav; sourceTree = "<group>"; };
+		2209D4562F1B822800334857 /* engine_idle.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = engine_idle.wav; sourceTree = "<group>"; };
+		2209D4572F1B822800334857 /* engine_rev.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = engine_rev.wav; sourceTree = "<group>"; };
+		2209D4582F1B822800334857 /* fuel_collect.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = fuel_collect.wav; sourceTree = "<group>"; };
+		2209D4592F1B822800334857 /* game_over.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = game_over.wav; sourceTree = "<group>"; };
+		2209D45A2F1B822800334857 /* gameplay_music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = gameplay_music.mp3; sourceTree = "<group>"; };
+		2209D45B2F1B822800334857 /* jump.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = jump.wav; sourceTree = "<group>"; };
+		2209D45C2F1B822800334857 /* land.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = land.wav; sourceTree = "<group>"; };
+		2209D45D2F1B822800334857 /* menu_music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = menu_music.mp3; sourceTree = "<group>"; };
+		2209D45E2F1B822800334857 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		2209D45F2F1B822800334857 /* upgrade.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = upgrade.wav; sourceTree = "<group>"; };
+		A1000000000 /* HillClimbRacer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HillClimbRacer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1000001000 /* HillClimbRacerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HillClimbRacerApp.swift; sourceTree = "<group>"; };
+		A1000002000 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A1000003000 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		A1000004000 /* Vehicle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vehicle.swift; sourceTree = "<group>"; };
+		A1000005000 /* ChassisNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChassisNode.swift; sourceTree = "<group>"; };
+		A1000006000 /* WheelNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WheelNode.swift; sourceTree = "<group>"; };
+		A1000007000 /* WheelSuspension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WheelSuspension.swift; sourceTree = "<group>"; };
+		A1000008000 /* TerrainChunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerrainChunk.swift; sourceTree = "<group>"; };
+		A1000009000 /* TerrainGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerrainGenerator.swift; sourceTree = "<group>"; };
+		A1000010000 /* TerrainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerrainManager.swift; sourceTree = "<group>"; };
+		A1000011000 /* PhysicsCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsCategories.swift; sourceTree = "<group>"; };
+		A1000012000 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		A1000013000 /* PerlinNoise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerlinNoise.swift; sourceTree = "<group>"; };
+		A1000014000 /* HUDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUDView.swift; sourceTree = "<group>"; };
+		A1000015000 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		A1000016000 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A1000017000 /* CoinNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinNode.swift; sourceTree = "<group>"; };
+		A1000018000 /* FuelCanNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuelCanNode.swift; sourceTree = "<group>"; };
+		A1000019000 /* InputManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputManager.swift; sourceTree = "<group>"; };
+		A1000020000 /* GameManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameManager.swift; sourceTree = "<group>"; };
+		A1000021000 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
+		A1000022000 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
+		A1000023000 /* MainMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuView.swift; sourceTree = "<group>"; };
+		A1000024000 /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
+		A1000025000 /* PauseMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseMenuView.swift; sourceTree = "<group>"; };
+		A1000026000 /* GarageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarageView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A1000000010 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2209D4602F1B822800334857 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				2209D4532F1B822800334857 /* button_tap.wav */,
+				2209D4542F1B822800334857 /* coin_collect.wav */,
+				2209D4552F1B822800334857 /* crash.wav */,
+				2209D4562F1B822800334857 /* engine_idle.wav */,
+				2209D4572F1B822800334857 /* engine_rev.wav */,
+				2209D4582F1B822800334857 /* fuel_collect.wav */,
+				2209D4592F1B822800334857 /* game_over.wav */,
+				2209D45A2F1B822800334857 /* gameplay_music.mp3 */,
+				2209D45B2F1B822800334857 /* jump.wav */,
+				2209D45C2F1B822800334857 /* land.wav */,
+				2209D45D2F1B822800334857 /* menu_music.mp3 */,
+				2209D45E2F1B822800334857 /* README.txt */,
+				2209D45F2F1B822800334857 /* upgrade.wav */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		A1000000020 = {
+			isa = PBXGroup;
+			children = (
+				A1000000030 /* HillClimbRacer */,
+				A1000000040 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A1000000030 /* HillClimbRacer */ = {
+			isa = PBXGroup;
+			children = (
+				2209D4602F1B822800334857 /* Audio */,
+				A1000000050 /* App */,
+				A1000000060 /* Scenes */,
+				A1000000070 /* Entities */,
+				A1000000080 /* Components */,
+				A10000000D0 /* Managers */,
+				A1000000090 /* Models */,
+				A10000000A0 /* Views */,
+				A10000000B0 /* Utilities */,
+				A10000000C0 /* Resources */,
+			);
+			path = HillClimbRacer;
+			sourceTree = "<group>";
+		};
+		A1000000040 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1000000000 /* HillClimbRacer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A1000000050 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				A1000001000 /* HillClimbRacerApp.swift */,
+				A1000002000 /* ContentView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		A1000000060 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				A1000003000 /* GameScene.swift */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		A1000000070 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				A1000000071 /* Vehicle */,
+				A1000000073 /* Collectibles */,
+				A1000000072 /* Terrain */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		A1000000071 /* Vehicle */ = {
+			isa = PBXGroup;
+			children = (
+				A1000004000 /* Vehicle.swift */,
+				A1000005000 /* ChassisNode.swift */,
+				A1000006000 /* WheelNode.swift */,
+				A1000007000 /* WheelSuspension.swift */,
+			);
+			path = Vehicle;
+			sourceTree = "<group>";
+		};
+		A1000000072 /* Terrain */ = {
+			isa = PBXGroup;
+			children = (
+				A1000008000 /* TerrainChunk.swift */,
+				A1000009000 /* TerrainGenerator.swift */,
+				A1000010000 /* TerrainManager.swift */,
+			);
+			path = Terrain;
+			sourceTree = "<group>";
+		};
+		A1000000073 /* Collectibles */ = {
+			isa = PBXGroup;
+			children = (
+				A1000017000 /* CoinNode.swift */,
+				A1000018000 /* FuelCanNode.swift */,
+			);
+			path = Collectibles;
+			sourceTree = "<group>";
+		};
+		A1000000080 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				A1000011000 /* PhysicsCategories.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		A1000000090 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A1000015000 /* GameState.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A10000000A0 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A1000014000 /* HUDView.swift */,
+				A1000023000 /* MainMenuView.swift */,
+				A1000024000 /* GameOverView.swift */,
+				A1000025000 /* PauseMenuView.swift */,
+				A1000026000 /* GarageView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A10000000B0 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				A1000012000 /* Constants.swift */,
+				A1000013000 /* PerlinNoise.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		A10000000C0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A1000016000 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A10000000D0 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				A1000019000 /* InputManager.swift */,
+				A1000020000 /* GameManager.swift */,
+				A1000021000 /* AudioManager.swift */,
+				A1000022000 /* PersistenceManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A1000000100 /* HillClimbRacer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1000000200 /* Build configuration list for PBXNativeTarget "HillClimbRacer" */;
+			buildPhases = (
+				A1000000110 /* Sources */,
+				A1000000010 /* Frameworks */,
+				A1000000120 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HillClimbRacer;
+			productName = HillClimbRacer;
+			productReference = A1000000000 /* HillClimbRacer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A1000000300 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1520;
+				LastUpgradeCheck = 2620;
+				TargetAttributes = {
+					A1000000100 = {
+						CreatedOnToolsVersion = 15.2;
+					};
+				};
+			};
+			buildConfigurationList = A1000000400 /* Build configuration list for PBXProject "HillClimbRacer" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A1000000020;
+			productRefGroup = A1000000040 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A1000000100 /* HillClimbRacer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A1000000120 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2209D4612F1B822800334857 /* game_over.wav in Resources */,
+				2209D4622F1B822800334857 /* fuel_collect.wav in Resources */,
+				2209D4632F1B822800334857 /* jump.wav in Resources */,
+				2209D4642F1B822800334857 /* engine_rev.wav in Resources */,
+				2209D4652F1B822800334857 /* engine_idle.wav in Resources */,
+				2209D4662F1B822800334857 /* upgrade.wav in Resources */,
+				2209D4672F1B822800334857 /* gameplay_music.mp3 in Resources */,
+				2209D4682F1B822800334857 /* crash.wav in Resources */,
+				2209D4692F1B822800334857 /* menu_music.mp3 in Resources */,
+				2209D46A2F1B822800334857 /* README.txt in Resources */,
+				2209D46B2F1B822800334857 /* coin_collect.wav in Resources */,
+				2209D46C2F1B822800334857 /* land.wav in Resources */,
+				2209D46D2F1B822800334857 /* button_tap.wav in Resources */,
+				A1000016001 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A1000000110 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000001001 /* HillClimbRacerApp.swift in Sources */,
+				A1000002001 /* ContentView.swift in Sources */,
+				A1000003001 /* GameScene.swift in Sources */,
+				A1000004001 /* Vehicle.swift in Sources */,
+				A1000005001 /* ChassisNode.swift in Sources */,
+				A1000006001 /* WheelNode.swift in Sources */,
+				A1000007001 /* WheelSuspension.swift in Sources */,
+				A1000008001 /* TerrainChunk.swift in Sources */,
+				A1000009001 /* TerrainGenerator.swift in Sources */,
+				A1000010001 /* TerrainManager.swift in Sources */,
+				A1000011001 /* PhysicsCategories.swift in Sources */,
+				A1000012001 /* Constants.swift in Sources */,
+				A1000013001 /* PerlinNoise.swift in Sources */,
+				A1000014001 /* HUDView.swift in Sources */,
+				A1000015001 /* GameState.swift in Sources */,
+				A1000017001 /* CoinNode.swift in Sources */,
+				A1000018001 /* FuelCanNode.swift in Sources */,
+				A1000019001 /* InputManager.swift in Sources */,
+				A1000020001 /* GameManager.swift in Sources */,
+				A1000021001 /* AudioManager.swift in Sources */,
+				A1000022001 /* PersistenceManager.swift in Sources */,
+				A1000023001 /* MainMenuView.swift in Sources */,
+				A1000024001 /* GameOverView.swift in Sources */,
+				A1000025001 /* PauseMenuView.swift in Sources */,
+				A1000026001 /* GarageView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A1000000500 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A1000000600 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A1000000700 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationLandscapeLeft;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hillclimbracer.game;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A1000000800 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationLandscapeLeft;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hillclimbracer.game;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A1000000200 /* Build configuration list for PBXNativeTarget "HillClimbRacer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000000700 /* Debug */,
+				A1000000800 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1000000400 /* Build configuration list for PBXProject "HillClimbRacer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000000500 /* Debug */,
+				A1000000600 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A1000000300 /* Project object */;
+}
