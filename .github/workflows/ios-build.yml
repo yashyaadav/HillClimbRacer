@@ -20,8 +20,15 @@ jobs:
     - name: Show Xcode version
       run: xcodebuild -version
 
+    - name: Setup Xcode
+      run: |
+        sudo xcodebuild -runFirstLaunch
+        sudo xcodebuild -license accept
+
     - name: Install iOS Simulator
-      run: xcodebuild -downloadPlatform iOS
+      run: |
+        xcodebuild -downloadPlatform iOS -quiet || true
+        xcrun simctl list runtimes
 
     - name: List available simulators
       run: xcrun simctl list devices available
