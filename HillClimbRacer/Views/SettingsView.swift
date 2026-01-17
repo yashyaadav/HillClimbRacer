@@ -175,9 +175,9 @@ struct SettingsView: View {
     private var statisticsSection: some View {
         SettingsSection(title: "Statistics", icon: "chart.bar.fill") {
             VStack(spacing: 12) {
-                StatRow(title: "Games Played", value: "\(persistence.gamesPlayed)")
-                StatRow(title: "Best Distance", value: "\(Int(persistence.bestDistance))m")
-                StatRow(title: "Total Coins", value: "\(persistence.totalCoins)")
+                SettingsStatRow(title: "Games Played", value: "\(persistence.gamesPlayed)")
+                SettingsStatRow(title: "Best Distance", value: "\(Int(persistence.bestDistance))m")
+                SettingsStatRow(title: "Total Coins", value: "\(persistence.totalCoins)")
             }
         }
     }
@@ -281,7 +281,7 @@ struct SettingsToggle: View {
 
 // MARK: - Stat Row
 
-struct StatRow: View {
+struct SettingsStatRow: View {
     let title: String
     let value: String
 
