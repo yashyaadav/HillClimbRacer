@@ -76,3 +76,13 @@ build/
 # Test results
 TestResults/
 *.xcresult
+
+# Claude Code / Claude Flow
+.claude/
+.claude-flow/
+.swarm/
+.mcp.json
+*.db
+claude-flow.json
+.env
+.env.local
