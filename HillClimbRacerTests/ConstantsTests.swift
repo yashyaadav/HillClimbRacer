@@ -69,6 +69,18 @@ final class ConstantsTests: XCTestCase {
         XCTAssertGreaterThan(Constants.Gameplay.fuelCanRefill, 0, "Fuel can refill should be positive")
     }
 
+    func testFuelDrainRateIs2Point5() {
+        // Verify exact fuel drain rate value for balance tuning
+        XCTAssertEqual(Constants.Gameplay.fuelDrainRate, 2.5,
+                       "Fuel drain rate should be exactly 2.5 per second")
+    }
+
+    func testThrottleFuelMultiplierIs1Point5() {
+        // Verify exact throttle multiplier value for balance tuning
+        XCTAssertEqual(Constants.Gameplay.throttleFuelMultiplier, 1.5,
+                       "Throttle fuel multiplier should be exactly 1.5")
+    }
+
     func testCoinValue() {
         XCTAssertGreaterThan(Constants.Gameplay.coinValue, 0, "Coin value should be positive")
     }

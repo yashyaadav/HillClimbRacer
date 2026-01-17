@@ -216,4 +216,235 @@ final class TerrainGeneratorTests: XCTestCase {
         XCTAssertGreaterThan(height, 0, "Should generate valid height at large distance")
         XCTAssertLessThan(height, 10000, "Height should be reasonable (not infinite)")
     }
+
+    // MARK: - Octave Noise Tests
+
+    func testOctaveNoiseProducesVariedTerrain() {
+        // Arrange - create noise generator directly to test octave noise
+        let noise = PerlinNoise(seed: 12345)
+
+        // Act - generate octave noise at multiple positions
+        var values: [CGFloat] = []
+        for x in stride(from: 0, to: 100, by: 1) {
+            let value = noise.octaveNoise(CGFloat(x) * 0.01, octaves: 4, persistence: 0.5)
+            values.append(value)
+        }
+
+        // Assert - octave noise should produce varied values (not all the same)
+        let uniqueValues = Set(values.map { Int($0 * 1000) })  // Compare with some precision
+        XCTAssertGreaterThan(uniqueValues.count, 1,
+                             "Octave noise should produce varied terrain values")
+
+        // Check that values are within expected range (-1 to 1)
+        for value in values {
+            XCTAssertGreaterThanOrEqual(value, -1.0, "Octave noise should be >= -1")
+            XCTAssertLessThanOrEqual(value, 1.0, "Octave noise should be <= 1")
+        }
+    }
+
+    func testOctaveNoiseIsDeterministic() {
+        // Arrange
+        let noise1 = PerlinNoise(seed: 12345)
+        let noise2 = PerlinNoise(seed: 12345)
+
+        // Act & Assert - same seed should produce same noise
+        for x in stride(from: 0, to: 50, by: 5) {
+            let value1 = noise1.octaveNoise(CGFloat(x) * 0.01, octaves: 4, persistence: 0.5)
+            let value2 = noise2.octaveNoise(CGFloat(x) * 0.01, octaves: 4, persistence: 0.5)
+
+            XCTAssertEqual(value1, value2, accuracy: 0.0001,
+                           "Same seed should produce identical octave noise at x=\(x)")
+        }
+    }
+
+    // MARK: - Jump Ramp Tests
+
+    func testJumpRampAppearsApproximatelyEvery1000Units() {
+        // Arrange - generate heights over a long stretch
+        var rampPeaks: [CGFloat] = []
+        var lastHeight: CGFloat = 0
+
+        // Scan terrain looking for local peaks (ramps)
+        for x in stride(from: 1000, to: 10000, by: 20) {
+            let height = generator.generateHeight(at: CGFloat(x))
+            let nextHeight = generator.generateHeight(at: CGFloat(x) + 20)
+
+            // Detect a peak (ramp apex)
+            if height > lastHeight && height > nextHeight && height > Constants.Terrain.baseHeight + 50 {
+                rampPeaks.append(CGFloat(x))
+            }
+            lastHeight = height
+        }
+
+        // Assert - should find multiple ramp features
+        // The exact count depends on noise variation, but ramps should appear periodically
+        XCTAssertGreaterThanOrEqual(rampPeaks.count, 3,
+                                    "Should find at least 3 ramp peaks over 9000 units")
+    }
+
+    func testJumpRampHeightScalesWithDistance() {
+        // Compare ramp effect at near distance vs far distance
+        // Due to distanceScale in jumpRampModifier, later ramps should be taller
+
+        // Get a baseline at early distance
+        var earlyMaxHeight: CGFloat = 0
+        for x in stride(from: 1000, to: 2000, by: 10) {
+            let height = generator.generateHeight(at: CGFloat(x))
+            earlyMaxHeight = max(earlyMaxHeight, height)
+        }
+
+        // Get heights at late distance
+        var lateMaxHeight: CGFloat = 0
+        for x in stride(from: 20000, to: 21000, by: 10) {
+            let height = generator.generateHeight(at: CGFloat(x))
+            lateMaxHeight = max(lateMaxHeight, height)
+        }
+
+        // Assert - late terrain should have higher maximum due to scaling
+        XCTAssertGreaterThan(lateMaxHeight, earlyMaxHeight,
+                             "Terrain features should scale with distance (progressive difficulty)")
+    }
+
+    // MARK: - Steep Section Tests
+
+    func testSteepSectionCreatesThreePartPattern() {
+        // Steep sections have: ascent -> plateau -> descent (3 parts, ~300 units each)
+        let sectionWidth: CGFloat = 300
+
+        // Find a steep section start (they occur every ~2500 units after initial area)
+        let steepStart: CGFloat = 2500
+
+        // Sample heights across the three parts
+        var ascentHeights: [CGFloat] = []
+        var descentHeights: [CGFloat] = []
+
+        // Ascent phase (first 300 units of section)
+        for x in stride(from: steepStart, to: steepStart + sectionWidth, by: 30) {
+            ascentHeights.append(generator.generateHeight(at: CGFloat(x)))
+        }
+
+        // Descent phase (600-900 units)
+        for x in stride(from: steepStart + sectionWidth * 2, to: steepStart + sectionWidth * 3, by: 30) {
+            descentHeights.append(generator.generateHeight(at: CGFloat(x)))
+        }
+
+        // Assert - heights should generally increase then stay steady then decrease
+        // Check that ascent end is higher than start
+        if let ascentFirst = ascentHeights.first, let ascentLast = ascentHeights.last {
+            XCTAssertGreaterThan(ascentLast, ascentFirst,
+                                 "Ascent phase should increase in height")
+        }
+
+        // Check that descent end is lower than start
+        if let descentFirst = descentHeights.first, let descentLast = descentHeights.last {
+            XCTAssertLessThan(descentLast, descentFirst,
+                              "Descent phase should decrease in height")
+        }
+    }
+
+    func testSteepSectionHeightIncreasesWithDistance() {
+        // Steep sections get taller at greater distances due to distance scaling
+
+        // Find max height in early steep section
+        var earlyMaxHeight: CGFloat = 0
+        for x in stride(from: 2500, to: 3400, by: 20) {
+            let height = generator.generateHeight(at: CGFloat(x))
+            earlyMaxHeight = max(earlyMaxHeight, height)
+        }
+
+        // Find max height in late steep section
+        var lateMaxHeight: CGFloat = 0
+        for x in stride(from: 25000, to: 25900, by: 20) {
+            let height = generator.generateHeight(at: CGFloat(x))
+            lateMaxHeight = max(lateMaxHeight, height)
+        }
+
+        // Assert - late steep sections should be taller
+        XCTAssertGreaterThan(lateMaxHeight, earlyMaxHeight,
+                             "Steep sections should be taller at greater distances")
+    }
+
+    // MARK: - Plateau Tests
+
+    func testPlateauCreatesRestArea() {
+        // Plateaus occur every ~3500 units and create relatively flat areas
+        let plateauStart: CGFloat = 3500  // First plateau
+
+        // Sample heights across plateau
+        var plateauHeights: [CGFloat] = []
+        let transitionWidth: CGFloat = 50
+        let plateauWidth: CGFloat = 200
+
+        // Sample the middle of the plateau (avoiding transitions)
+        for x in stride(from: plateauStart + transitionWidth + 10,
+                        to: plateauStart + plateauWidth - transitionWidth - 10,
+                        by: 10) {
+            plateauHeights.append(generator.generateHeight(at: CGFloat(x)))
+        }
+
+        // Assert - heights within plateau should have low variance
+        if plateauHeights.count > 2 {
+            let minHeight = plateauHeights.min() ?? 0
+            let maxHeight = plateauHeights.max() ?? 0
+            let variance = maxHeight - minHeight
+
+            // Plateaus add a constant +20, so variance should be primarily from base terrain
+            // The flat portion should have relatively consistent height
+            XCTAssertLessThan(variance, 100,
+                              "Plateau area should have moderate height variance (rest area)")
+        }
+    }
+
+    func testPlateauTransitionsAreSmooth() {
+        // Check that plateau entry/exit uses gradual transitions
+        let plateauStart: CGFloat = 3500
+        let transitionWidth: CGFloat = 50
+
+        // Sample heights during transition
+        var transitionHeights: [CGFloat] = []
+        for x in stride(from: plateauStart, to: plateauStart + transitionWidth, by: 5) {
+            transitionHeights.append(generator.generateHeight(at: CGFloat(x)))
+        }
+
+        // Assert - heights should gradually change, not have huge jumps
+        for i in 1..<transitionHeights.count {
+            let diff = abs(transitionHeights[i] - transitionHeights[i-1])
+            XCTAssertLessThan(diff, 50,
+                              "Plateau transition should be gradual (no jumps > 50 units)")
+        }
+    }
+
+    // MARK: - Progressive Difficulty Tests
+
+    func testDifficultyIncreasesWithDistance() {
+        // Sample average heights at different distances
+        func averageHeight(from start: CGFloat, to end: CGFloat) -> CGFloat {
+            var total: CGFloat = 0
+            var count: CGFloat = 0
+            for x in stride(from: start, to: end, by: 50) {
+                total += generator.generateHeight(at: CGFloat(x))
+                count += 1
+            }
+            return total / count
+        }
+
+        let earlyAverage = averageHeight(from: 1000, to: 3000)
+        let midAverage = averageHeight(from: 10000, to: 12000)
+        let lateAverage = averageHeight(from: 30000, to: 32000)
+
+        // Assert - difficulty (manifested as terrain amplitude) increases
+        XCTAssertGreaterThan(midAverage, earlyAverage,
+                             "Mid-game terrain should be higher than early terrain")
+        XCTAssertGreaterThan(lateAverage, midAverage,
+                             "Late-game terrain should be higher than mid-game terrain")
+    }
+
+    func testMinimumHeightMaintained() {
+        // Verify that generateHeight never returns less than minimum (50)
+        for x in stride(from: 0, to: 50000, by: 100) {
+            let height = generator.generateHeight(at: CGFloat(x))
+            XCTAssertGreaterThanOrEqual(height, 50,
+                                        "Height at x=\(x) should be at least 50 (minimum)")
+        }
+    }
 }
