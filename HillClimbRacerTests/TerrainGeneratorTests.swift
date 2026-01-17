@@ -40,7 +40,11 @@ final class TerrainGeneratorTests: XCTestCase {
         let startX: CGFloat = 1000
         let points = generator.generateChunk(startX: startX, width: 800)
 
-        XCTAssertEqual(points.first?.x, startX, accuracy: 0.1, "First point should be at startX")
+        guard let firstPoint = points.first else {
+            XCTFail("Expected points to have at least one element")
+            return
+        }
+        XCTAssertEqual(firstPoint.x, startX, accuracy: 0.1, "First point should be at startX")
     }
 
     func testChunkEndsAtCorrectX() {
@@ -136,7 +140,11 @@ final class TerrainGeneratorTests: XCTestCase {
     func testStartingAreaStartsAtZero() {
         let points = generator.generateStartingArea(width: 800)
 
-        XCTAssertEqual(points.first?.x, 0, accuracy: 0.1, "Starting area should begin at x=0")
+        guard let firstPoint = points.first else {
+            XCTFail("Expected points to have at least one element")
+            return
+        }
+        XCTAssertEqual(firstPoint.x, 0, accuracy: 0.1, "Starting area should begin at x=0")
     }
 
     // MARK: - Biome Modifier Tests
@@ -174,7 +182,11 @@ final class TerrainGeneratorTests: XCTestCase {
         XCTAssertGreaterThan(points.count, 0, "Should generate starting area with biome")
 
         // Starting area should still be flat initially
-        XCTAssertEqual(points.first?.y, Constants.Terrain.baseHeight, accuracy: 0.1)
+        guard let firstPoint = points.first else {
+            XCTFail("Expected points to have at least one element")
+            return
+        }
+        XCTAssertEqual(firstPoint.y, Constants.Terrain.baseHeight, accuracy: 0.1)
     }
 
     // MARK: - Edge Cases
@@ -189,7 +201,11 @@ final class TerrainGeneratorTests: XCTestCase {
     func testNegativeStartX() {
         let points = generator.generateChunk(startX: -500, width: 800)
 
-        XCTAssertEqual(points.first?.x, -500, accuracy: 0.1, "Should handle negative start X")
+        guard let firstPoint = points.first else {
+            XCTFail("Expected points to have at least one element")
+            return
+        }
+        XCTAssertEqual(firstPoint.x, -500, accuracy: 0.1, "Should handle negative start X")
         XCTAssertGreaterThan(points.count, 0)
     }
 
